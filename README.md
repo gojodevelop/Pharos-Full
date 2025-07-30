@@ -1,4 +1,4 @@
-#Update Pharos tool using nodejs (noproxy and proxy)
+# Update Pharos tool using nodejs (noproxy and proxy)
 
 ✔️ Auto mint badge
 
