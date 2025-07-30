@@ -1,4 +1,4 @@
-Update Pharos tool using nodejs (noproxy and proxy)
+#Update Pharos tool using nodejs (noproxy and proxy)
 
 ✔️ Auto mint badge
 
@@ -46,7 +46,7 @@ This will install ethers, axios, dotenv, and other necessary libraries.
 
 2️⃣ Setup input data:
 
-# Open data folder
+## Open data folder
 ```bash
 privateKeys.txt saves evm wallet private key
 ```
