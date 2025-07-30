@@ -27,8 +27,8 @@ Update Pharos tool using nodejs (noproxy and proxy)
 ## 🚀 Setup & Installation
 Clone the Repository
 ```bash
-git clone https://github.com/atczxc1-cell/Pharos-S2.git
-cd Pharos-S2
+git clone https://github.com/atczxc1-cell/Pharos-Full.git
+cd Pharos-Full
 ```
 ## Install Dependencies
 ```bash
