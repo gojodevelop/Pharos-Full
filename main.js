@@ -862,7 +862,7 @@ async function main() {
     const wallet = new ethers.Wallet(prvk);
     const item = {
       address: wallet.address,
-      privateKey: prvk,
+      privateKey: val,
     };
     new ClientAPI(item, index, proxies[index], resCheck.endpoint, {}).createUserAgent();
     return item;
