@@ -1,4 +1,6 @@
-  # Update Pharos tool using nodejs (noproxy and proxy)
+  ## Update RPC. This bot uses the default Pharos RPC URL. If you want it smoother, create your own RPC at https://zan.top/service/apikeys and then Copy apiKey paste in file .env
+
+  # Update Pharos bot using nodejs (noproxy and proxy)
 
 ✔️ Auto mint badge
 

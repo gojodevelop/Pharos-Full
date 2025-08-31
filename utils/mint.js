@@ -149,7 +149,7 @@ class MintService {
     }
   }
 
-async mintSpout() {
+  async mintSpout() {
     try {
       const wallet = this.wallet;
       const provider = this.provider;
@@ -211,7 +211,222 @@ async mintSpout() {
       };
     }
   }
-  
+
+  async mintPns() {
+    try {
+      const wallet = this.wallet;
+      const provider = this.provider;
+      const balance = await provider.getBalance(wallet.address);
+      const balanceInEther = ethers.formatEther(balance);
+      const CONTRACT_ADDRESS = "0x4af366c7269dc9a0335bd055af979729c20e0f5f";
+
+      const feeData = await provider.getFeeData();
+      if (balanceInEther < 1.0005) {
+        return {
+          tx: null,
+          success: false,
+          stop: true,
+          message: `Insufficient PHRS for mint. Need min ${1.0005} PHRS, have ${balanceInEther}`,
+        };
+      }
+      const pendingNonce = await provider.getTransactionCount(wallet.address, "pending");
+      const latestNonce = await provider.getTransactionCount(wallet.address, "latest");
+      if (pendingNonce > latestNonce) {
+        return {
+          tx: null,
+          success: false,
+          stop: false,
+          message: "There are pending transactions. Please wait for them to be completed.",
+        };
+      }
+
+      const calldata = this.createCalldata(wallet.address);
+      const valueInWei = ethers.parseEther("1");
+      const address = wallet.address;
+
+      const gasEstimate = await provider.estimateGas({
+        to: CONTRACT_ADDRESS,
+        data: calldata,
+        value: valueInWei,
+        from: address
+      });
+
+
+      const gasLimit = gasEstimate * 120n / 100n;
+      // Send transaction
+      const tx = await wallet.sendTransaction({
+        to: CONTRACT_ADDRESS,
+        data: calldata,
+        gasPrice: feeData.gasPrice,
+        gasLimit: gasLimit,
+        nonce: latestNonce,
+        value: valueInWei,
+      });
+
+      await tx.wait(3);
+      return {
+        tx: tx.hash,
+        success: true,
+        message: `Mint Pns successful! Transaction hash: ${EXPOLER}${tx.hash}`,
+      };
+    } catch (error) {
+      if (error.code === "NONCE_EXPIRED" || (error.message && error.message.includes("TX_REPLAY_ATTACK"))) {
+        return {
+          tx: null,
+          success: false,
+          stop: true,
+          message: "Nonce conflict detected. Please retry the transaction.",
+        };
+      }
+      return {
+        tx: null,
+        success: false,
+        stop: true,
+        message: `Error Pns: ${error.shortMessage ?? error.message}`,
+      };
+    }
+  }
+
+  async mintBrokex() {
+    try {
+      const wallet = this.wallet;
+      const provider = this.provider;
+      const balance = await provider.getBalance(wallet.address);
+      const balanceInEther = ethers.formatEther(balance);
+      const CONTRACT_ADDRESS = "0x9979b7fedf761c2989642f63ba6ed580dbdfc46f";
+
+      const feeData = await provider.getFeeData();
+      if (balanceInEther < 1.0005) {
+        return {
+          tx: null,
+          success: false,
+          stop: true,
+          message: `Insufficient PHRS for mint. Need min ${1.0005} PHRS, have ${balanceInEther}`,
+        };
+      }
+      const pendingNonce = await provider.getTransactionCount(wallet.address, "pending");
+      const latestNonce = await provider.getTransactionCount(wallet.address, "latest");
+      if (pendingNonce > latestNonce) {
+        return {
+          tx: null,
+          success: false,
+          stop: false,
+          message: "There are pending transactions. Please wait for them to be completed.",
+        };
+      }
+
+      const calldata = this.createCalldata(wallet.address);
+      const valueInWei = ethers.parseEther("1");
+      const address = wallet.address;
+
+      const gasEstimate = await provider.estimateGas({
+        to: CONTRACT_ADDRESS,
+        data: calldata,
+        value: valueInWei,
+        from: address
+      });
+
+
+      const gasLimit = gasEstimate * 120n / 100n;
+      // Send transaction
+      const tx = await wallet.sendTransaction({
+        to: CONTRACT_ADDRESS,
+        data: calldata,
+        gasPrice: feeData.gasPrice,
+        gasLimit: gasLimit,
+        nonce: latestNonce,
+        value: valueInWei,
+      });
+
+      await tx.wait(3);
+      return {
+        tx: tx.hash,
+        success: true,
+        message: `Mint Brokex successful! Transaction hash: ${EXPOLER}${tx.hash}`,
+      };
+    } catch (error) {
+      if (error.code === "NONCE_EXPIRED" || (error.message && error.message.includes("TX_REPLAY_ATTACK"))) {
+        return {
+          tx: null,
+          success: false,
+          stop: true,
+          message: "Nonce conflict detected. Please retry the transaction.",
+        };
+      }
+      return {
+        tx: null,
+        success: false,
+        stop: true,
+        message: `Error Brokex: ${error.shortMessage ?? error.message}`,
+      };
+    }
+  }
+
+  async mintStaking() {
+    try {
+      const wallet = this.wallet;
+      const provider = this.provider;
+      const balance = await provider.getBalance(wallet.address);
+      const balanceInEther = ethers.formatEther(balance);
+
+      const feeData = await provider.getFeeData();
+      if (balanceInEther < 1.0005) {
+        return {
+          tx: null,
+          success: false,
+          stop: true,
+          message: `Insufficient PHRS for mint. Need min ${1.0005} PHRS, have ${balanceInEther}`,
+        };
+      }
+      const pendingNonce = await provider.getTransactionCount(wallet.address, "pending");
+      const latestNonce = await provider.getTransactionCount(wallet.address, "latest");
+      if (pendingNonce > latestNonce) {
+        return {
+          tx: null,
+          success: false,
+          stop: false,
+          message: "There are pending transactions. Please wait for them to be completed.",
+        };
+      }
+
+      const calldata = this.createCalldata(wallet.address);
+      const valueInWei = ethers.parseEther("1");
+
+      // Send transaction
+      const tx = await wallet.sendTransaction({
+        to: "0x0d00314d006e70ca08ac37c3469b4bf958a7580b", // contract staking
+        data: calldata,
+        gasPrice: feeData.gasPrice,
+        gasLimit: 1000000000,
+        nonce: latestNonce,
+        value: valueInWei,
+      });
+
+      await tx.wait(3);
+      return {
+        tx: tx.hash,
+        success: true,
+        message: `Mint Staking successful! Transaction hash: ${EXPOLER}${tx.hash}`,
+      };
+    } catch (error) {
+      if (error.code === "NONCE_EXPIRED" || (error.message && error.message.includes("TX_REPLAY_ATTACK"))) {
+        return {
+          tx: null,
+          success: false,
+          stop: true,
+          message: "Nonce conflict detected. Please retry the transaction.",
+        };
+      }
+      return {
+        tx: null,
+        success: false,
+        stop: true,
+        message: `Error Staking: ${error.shortMessage ?? error.message}`,
+      };
+    }
+  }
+
+
   async mintPharosBadge() {
     try {
       const wallet = this.wallet;

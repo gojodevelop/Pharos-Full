@@ -27,6 +27,7 @@ const MintService = require("./utils/mint.js");
 const SwapService = require("./utils/swap.js");
 const MintNameService = require("./utils/mint.domain.js");
 const AquaFluxService = require("./utils/aquaflux.js");
+const StakingService = require("./utils/autostaking.js");
 
 // const querystring = require("querystring");
 class ClientAPI {
@@ -671,9 +672,16 @@ Issued At: ${time}`;
               result = await mintService.mintFarosBadge();
             } else if (nft == "zentra") {
               result = await mintService.mintZentra();
-            }
-            else if (nft == "spout") {
+            } else if (nft == "spout") {
               result = await mintService.mintSpout();
+            } else if (nft == "stake") {
+              result = await mintService.mintStaking();
+            } else if (nft == "pns") {
+              result = await mintService.mintPns();
+            } else if (nft == "pns") {
+              result = await mintService.mintPns();
+            } else if (nft == "brokex") {
+              result = await mintService.mintBrokex();
             } else {
               this.log(`Unknown NFT type: ${nft}`, "error");
               break;
@@ -750,6 +758,36 @@ Issued At: ${time}`;
         // }
       } catch (error) {
         this.log(`Err add liquility: ${error.message}`, "warning");
+      }
+    }
+
+    if (settings.AUTO_STAKING) {
+      this.log(`Starting auto staking...`);
+      const stakingService = new StakingService(prams);
+      let limit = settings.NUMBER_STAKING;
+      let current = limit;
+      while (current > 0) {
+        //let amount = getRandomNumber(settings.AMOUNT_STAKING[0], settings.AMOUNT_STAKING[1], 6);
+        try {
+          const result = await stakingService.processAccount();
+
+          if (result.success) {
+            this.log(result.message, "success");
+          } else {
+            this.log(result.message, "warning");
+            if (result?.stop) {
+              break;
+            }
+          }
+        } catch (error) {
+          this.log(`Err stake token: ${error.message}`, "warning");
+        }
+        current--;
+        if (current > 0) {
+          const timesleep = getRandomNumber(settings.DELAY_BETWEEN_REQUESTS[0], settings.DELAY_BETWEEN_REQUESTS[1]);
+          this.log(`[${current}/${limit}] Delay ${timesleep}s to next transaction...`);
+          await sleep(timesleep);
+        }
       }
     }
   }
