@@ -19,7 +19,9 @@
 ✔️ Auto checkin
 
 ✔️ Auto swap
+
 ✔️ Auto mintNFT
+
 ✔️ Auto Aquaflux dapp
 
 ✔️ Multi-thread, multi-account...
@@ -40,7 +42,11 @@ This will install ethers, axios, dotenv, and other necessary libraries.
 
 🖥 Instructions (nodejs required):
 
-1️⃣ npm install to update the module. Configure .env file
+## Configure .env file
+```bash
+setup true/false features
+```
+1️⃣ npm install to update the module.
 ```bash
 npm install
 ```
