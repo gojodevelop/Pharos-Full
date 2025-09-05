@@ -682,6 +682,8 @@ Issued At: ${time}`;
               result = await mintService.mintPns();
             } else if (nft == "brokex") {
               result = await mintService.mintBrokex();
+            } else if (nft == "openfi") {
+              result = await mintService.mintOpenFi();
             } else {
               this.log(`Unknown NFT type: ${nft}`, "error");
               break;
